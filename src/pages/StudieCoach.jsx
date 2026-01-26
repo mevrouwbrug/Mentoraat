@@ -1,38 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 
-const vragen = [
-  {
-    id: 'pomodoro',
-    vraag: 'Vind je het lastig om lang achter elkaar gefocust te blijven?',
-    techniek: 'Pomodoro'
-  },
-  {
-    id: 'cornell',
-    vraag: 'Zijn je aantekeningen vaak onoverzichtelijk of een rommeltje?',
-    techniek: 'Cornell'
-  },
-  {
-    id: 'mindmaps',
-    vraag: 'Vind je het fijn om met kleuren en tekeningen te werken?',
-    techniek: 'Mindmaps'
-  },
-  {
-    id: 'dualcoding',
-    vraag: 'Vind je alleen tekst lezen saai en lastig om te onthouden?',
-    techniek: 'Dual Coding'
-  },
-  {
-    id: 'retrieval',
-    vraag: 'Ken je de stof vaak wel voor je gevoel, maar vergeet je alles tijdens de toets?',
-    techniek: 'Retrieval Practice'
-  },
-  {
-    id: 'samenvatten',
-    vraag: 'Vind je het moeilijk om de belangrijkste punten uit een tekst te halen?',
-    techniek: 'Samenvatten'
-  }
-]
+// Meerdere vraagvarianten per techniek
+const vragenPerTechniek = {
+  pomodoro: [
+    'Vind je het lastig om lang achter elkaar gefocust te blijven?',
+    'Merk je dat je vaak afgeleid wordt tijdens het leren?',
+    'Heb je moeite om door te werken zonder pauze te nemen?',
+    'Pak je vaak je telefoon terwijl je eigenlijk moet studeren?'
+  ],
+  cornell: [
+    'Zijn je aantekeningen vaak onoverzichtelijk of een rommeltje?',
+    'Heb je moeite om later terug te vinden wat je hebt opgeschreven?',
+    'Weet je na de les niet meer precies wat de hoofdpunten waren?',
+    'Schrijf je alles op zonder structuur?'
+  ],
+  mindmaps: [
+    'Vind je het fijn om met kleuren en tekeningen te werken?',
+    'Onthoud je dingen beter als je ze visueel maakt?',
+    'Zie je graag verbanden en verbindingen tussen onderwerpen?',
+    'Leer je beter met plaatjes dan met alleen tekst?'
+  ],
+  dualcoding: [
+    'Vind je alleen tekst lezen saai en lastig om te onthouden?',
+    'Snap je dingen beter als er een plaatje of schema bij zit?',
+    'Vergeet je snel wat je hebt gelezen als er geen afbeeldingen bij zijn?',
+    'Maak je graag tekeningen bij moeilijke begrippen?'
+  ],
+  retrieval: [
+    'Ken je de stof vaak wel voor je gevoel, maar vergeet je alles tijdens de toets?',
+    'Lees je de stof vaak alleen door zonder jezelf te testen?',
+    'Schrik je tijdens een toets omdat je minder weet dan je dacht?',
+    'Heb je het gevoel dat je alles snapt, maar kun je het niet uitleggen?'
+  ],
+  samenvatten: [
+    'Vind je het moeilijk om de belangrijkste punten uit een tekst te halen?',
+    'Weet je na het lezen niet goed wat nu echt belangrijk was?',
+    'Heb je moeite om een lang verhaal kort te maken?',
+    'Leer je vaak te veel details in plaats van de hoofdzaken?'
+  ]
+}
 
 const antwoordOpties = [
   { tekst: 'Klopt precies!', punten: 3 },
@@ -40,10 +47,25 @@ const antwoordOpties = [
   { tekst: 'Niet echt', punten: 0 }
 ]
 
+// Selecteer random vraag per techniek
+const selecteerRandomVragen = () => {
+  return Object.entries(vragenPerTechniek).map(([id, vragen]) => ({
+    id,
+    vraag: vragen[Math.floor(Math.random() * vragen.length)],
+    techniek: id.charAt(0).toUpperCase() + id.slice(1)
+  }))
+}
+
 function StudieCoach() {
   const navigate = useNavigate()
+  const [vragen, setVragen] = useState([])
   const [antwoorden, setAntwoorden] = useState({})
   const [huidigeVraag, setHuidigeVraag] = useState(0)
+
+  // Selecteer random vragen bij laden
+  useEffect(() => {
+    setVragen(selecteerRandomVragen())
+  }, [])
 
   const handleAntwoord = (vraagId, punten) => {
     setAntwoorden(prev => ({
@@ -70,7 +92,9 @@ function StudieCoach() {
   }
 
   const alleVragenBeantwoord = Object.keys(antwoorden).length === vragen.length
-  const voortgang = (Object.keys(antwoorden).length / vragen.length) * 100
+  const voortgang = vragen.length > 0 ? (Object.keys(antwoorden).length / vragen.length) * 100 : 0
+
+  if (vragen.length === 0) return null
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center relative">
@@ -93,12 +117,12 @@ function StudieCoach() {
         </div>
 
         {/* Voortgangsbalk */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex justify-between text-sm text-white/80 mb-2">
             <span>Vraag {Math.min(huidigeVraag + 1, vragen.length)} van {vragen.length}</span>
             <span>{Math.round(voortgang)}% voltooid</span>
           </div>
-          <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+          <div className="h-2 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
             <div 
               className="h-full bg-white transition-all duration-500 ease-out rounded-full"
               style={{ width: `${voortgang}%` }}
@@ -106,8 +130,8 @@ function StudieCoach() {
           </div>
         </div>
 
-        {/* Vragenkaart */}
-        <div className="bg-white rounded-2xl p-8 shadow-2xl mb-6">
+        {/* Vragenkaart - Glasmorfisme */}
+        <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/20 shadow-xl mb-6">
           {vragen.map((vraag, index) => (
             <div 
               key={vraag.id}
@@ -115,11 +139,11 @@ function StudieCoach() {
                 index === huidigeVraag ? 'block' : 'hidden'
               }`}
             >
-              <div className="text-center mb-8">
-                <span className="inline-flex w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full items-center justify-center font-bold text-lg mb-4 shadow-lg">
+              <div className="text-center mb-6">
+                <span className="inline-flex w-10 h-10 bg-white/20 backdrop-blur-sm text-white rounded-full items-center justify-center font-bold text-lg mb-4 border border-white/30">
                   {index + 1}
                 </span>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+                <h2 className="text-xl md:text-2xl font-bold text-white drop-shadow-md">
                   {vraag.vraag}
                 </h2>
               </div>
@@ -127,18 +151,17 @@ function StudieCoach() {
               <div className="space-y-3">
                 {antwoordOpties.map((optie, optieIndex) => {
                   const isSelected = antwoorden[vraag.id] === optie.punten
-                  // Nieuwe kleuren - helder en leesbaar
-                  const baseKleuren = [
-                    'bg-emerald-500 hover:bg-emerald-600', // Klopt precies - groen
-                    'bg-amber-500 hover:bg-amber-600',     // Soms - geel/oranje  
-                    'bg-slate-500 hover:bg-slate-600'      // Niet echt - grijs
+                  const kleuren = [
+                    'bg-emerald-500/80 hover:bg-emerald-500 border-emerald-400/50',
+                    'bg-amber-500/80 hover:bg-amber-500 border-amber-400/50',
+                    'bg-slate-500/80 hover:bg-slate-500 border-slate-400/50'
                   ]
                   return (
                     <button
                       key={optie.tekst}
                       onClick={() => handleAntwoord(vraag.id, optie.punten)}
-                      className={`w-full p-4 rounded-lg text-left transition-all duration-200 font-semibold text-white shadow-md hover:shadow-lg ${baseKleuren[optieIndex]} ${
-                        isSelected ? 'ring-4 ring-purple-300 ring-offset-2' : ''
+                      className={`w-full p-4 rounded-xl text-left transition-all duration-200 font-semibold text-white border backdrop-blur-sm ${kleuren[optieIndex]} ${
+                        isSelected ? 'ring-2 ring-white ring-offset-2 ring-offset-transparent scale-[1.02]' : ''
                       }`}
                     >
                       <span className="pl-2">{optie.tekst}</span>
@@ -181,9 +204,9 @@ function StudieCoach() {
             <button
               onClick={handleVerstuur}
               disabled={!alleVragenBeantwoord}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
                 alleVragenBeantwoord
-                  ? 'bg-white text-purple-600 hover:shadow-xl hover:scale-105'
+                  ? 'bg-white/90 backdrop-blur-sm text-purple-600 hover:bg-white hover:shadow-xl hover:scale-105'
                   : 'bg-white/20 text-white/50 cursor-not-allowed'
               }`}
             >
@@ -196,7 +219,7 @@ function StudieCoach() {
         </div>
 
         {/* Vraag navigatie dots */}
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-2 mt-6">
           {vragen.map((_, index) => (
             <button
               key={index}
