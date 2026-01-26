@@ -86,7 +86,6 @@ function MLGesprek() {
   const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all text-base"
   const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
   const labelClass = "block text-gray-800 font-semibold mb-2"
-  const cardClass = "bg-white rounded-xl p-5 shadow-md"
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
@@ -109,116 +108,111 @@ function MLGesprek() {
           <p className="text-white/80">Vervolggesprek - Hoe gaat het met je actiepunten?</p>
         </div>
 
-        <div className="space-y-4">
+        {/* Eén groot wit vlak */}
+        <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg">
+          
           {/* Naam, Klas, Datum */}
-          <div className={cardClass}>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <label className={labelClass}>Naam</label>
-                <input type="text" name="naam" value={formData.naam} onChange={handleChange} className={inputClass} placeholder="Vul je naam in" />
-              </div>
-              <div>
-                <label className={labelClass}>Klas</label>
-                <input type="text" name="klas" value={formData.klas} onChange={handleChange} className={inputClass} placeholder="Bijv. 3A" />
-              </div>
-              <div>
-                <label className={labelClass}>Datum</label>
-                <input type="date" name="datum" value={formData.datum} onChange={handleChange} className={inputClass} />
-              </div>
+          <div className="grid md:grid-cols-3 gap-4 pb-6 border-b border-gray-200">
+            <div>
+              <label className={labelClass}>Naam</label>
+              <input type="text" name="naam" value={formData.naam} onChange={handleChange} className={inputClass} placeholder="Vul je naam in" />
+            </div>
+            <div>
+              <label className={labelClass}>Klas</label>
+              <input type="text" name="klas" value={formData.klas} onChange={handleChange} className={inputClass} placeholder="Bijv. 3A" />
+            </div>
+            <div>
+              <label className={labelClass}>Datum</label>
+              <input type="date" name="datum" value={formData.datum} onChange={handleChange} className={inputClass} />
             </div>
           </div>
 
           {/* Gevoelsmeter */}
-          <div className={cardClass}>
+          <div className="py-6 border-b border-gray-200">
             <h2 className="text-lg font-bold text-slate-800 mb-4">Hoe voel je je?</h2>
-            <div className="space-y-4">
-              <input
-                type="range"
-                name="gevoel"
-                min="0"
-                max="100"
-                value={formData.gevoel}
-                onChange={handleChange}
-                className="w-full h-3 rounded-full appearance-none cursor-pointer"
-                style={{
-                  background: `linear-gradient(to right, #EF4444, #F59E0B, #10B981)`
-                }}
-              />
-              <div className="flex justify-between text-xs text-slate-500">
-                <span>Slecht</span>
-                <span>Matig</span>
-                <span>Goed</span>
-                <span>Uitstekend</span>
-              </div>
-              <div className="text-center">
-                <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${gevoelInfo.bg} ${gevoelInfo.color}`}>
-                  {gevoelInfo.label}
-                </span>
-              </div>
+            <input
+              type="range"
+              name="gevoel"
+              min="0"
+              max="100"
+              value={formData.gevoel}
+              onChange={handleChange}
+              className="w-full h-3 rounded-full appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #EF4444, #F59E0B, #10B981)`
+              }}
+            />
+            <div className="flex justify-between text-xs text-slate-500 mt-2">
+              <span>Slecht</span>
+              <span>Matig</span>
+              <span>Goed</span>
+              <span>Uitstekend</span>
+            </div>
+            <div className="text-center mt-3">
+              <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${gevoelInfo.bg} ${gevoelInfo.color}`}>
+                {gevoelInfo.label}
+              </span>
             </div>
           </div>
 
           {/* Sectie header */}
-          <div className="text-center pt-4">
-            <h2 className="text-xl font-bold text-white">Vervolggesprek</h2>
-            <p className="text-white/70 text-sm">Hoe gaat het met de actiepunten uit het vorige gesprek?</p>
+          <div className="pt-6 pb-4">
+            <h2 className="text-lg font-bold text-slate-800">Vervolggesprek</h2>
+            <p className="text-slate-500 text-sm">Hoe gaat het met de actiepunten uit het vorige gesprek?</p>
           </div>
 
           {/* Vraag 1 */}
-          <div className={cardClass}>
+          <div className="pb-5 border-b border-gray-100">
             <label className={labelClass}>1. Is het gelukt? Zijn er nog actiepunten?</label>
             <textarea name="actiepuntenStatus" value={formData.actiepuntenStatus} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf de voortgang..." />
           </div>
 
           {/* Vraag 2 */}
-          <div className={cardClass}>
+          <div className="py-5 border-b border-gray-100">
             <label className={labelClass}>2. Welke aanpassingen zijn er nodig?</label>
             <textarea name="aanpassingen" value={formData.aanpassingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf eventuele aanpassingen..." />
           </div>
 
           {/* Vraag 3 */}
-          <div className={cardClass}>
+          <div className="py-5 border-b border-gray-100">
             <label className={labelClass}>3. Hoe ga je dat aanpakken?</label>
             <textarea name="hoeAanpakken" value={formData.hoeAanpakken} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je nieuwe aanpak..." />
           </div>
 
           {/* Vraag 4 */}
-          <div className={cardClass}>
+          <div className="py-5 border-b border-gray-100">
             <label className={labelClass}>4. Wat kun je zelf doen?</label>
             <textarea name="zelfDoen" value={formData.zelfDoen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf wat je zelf kunt doen..." />
           </div>
 
           {/* Vraag 5 */}
-          <div className={cardClass}>
+          <div className="py-5 border-b border-gray-100">
             <label className={labelClass}>5. Waar kunnen jouw ouders bij helpen?</label>
             <textarea name="oudersHelpen" value={formData.oudersHelpen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf hoe ouders kunnen helpen..." />
           </div>
 
           {/* Vraag 6 */}
-          <div className={cardClass}>
+          <div className="py-5 border-b border-gray-200">
             <label className={labelClass}>6. Wat wil je je mentor vragen?</label>
             <textarea name="mentorVragen" value={formData.mentorVragen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Vragen voor je mentor..." />
           </div>
 
           {/* Actiepunten */}
-          <div className="text-center pt-4">
-            <h2 className="text-xl font-bold text-white">Actiepunten</h2>
-          </div>
-
-          <div className="bg-white rounded-xl p-5 shadow-md border-2 border-pink-200">
-            <label className={labelClass}>Mijn actiepunten voor komende periode</label>
+          <div className="pt-6">
+            <h2 className="text-lg font-bold text-slate-800 mb-4">Mijn actiepunten voor komende periode</h2>
             <textarea name="actiepunten" value={formData.actiepunten} onChange={handleChange} rows="4" className={textareaClass} placeholder="1.&#10;2.&#10;3." />
           </div>
 
-          {/* PDF knop */}
-          <div className="flex justify-center pt-4 no-print">
-            <button onClick={generatePDF} className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium py-3 px-6 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Genereer PDF voor Magister
-            </button>
-          </div>
+        </div>
+
+        {/* PDF knop */}
+        <div className="flex justify-center pt-6 no-print">
+          <button onClick={generatePDF} className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium py-3 px-6 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Genereer PDF voor Magister
+          </button>
         </div>
       </div>
     </div>
