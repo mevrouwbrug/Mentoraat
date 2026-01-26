@@ -15,6 +15,7 @@ function ReflectieToetsweek() {
   const [formData, setFormData] = useState({
     naam: '',
     klas: '',
+    toetsweek: '',
     positieveStrategieen: '',
     positieveLeergewoontes: [],
     negatieveStrategieen: '',
@@ -109,7 +110,8 @@ function ReflectieToetsweek() {
     doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
     doc.text(`Naam: ${formData.naam}`, 20, y)
-    doc.text(`Klas: ${formData.klas}`, 120, y)
+    doc.text(`Klas: ${formData.klas}`, 80, y)
+    doc.text(`${formData.toetsweek || 'Toetsweek: -'}`, 130, y)
     y += 15
 
     const addSection = (title, content) => {
@@ -283,9 +285,9 @@ function ReflectieToetsweek() {
         </div>
 
         <div className="space-y-6">
-          {/* Naam en Klas */}
+          {/* Naam, Klas en Toetsweek */}
           <div className="bg-white rounded p-6 shadow-lg border-2 border-gray-100">
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>Naam leerling</label>
                 <input type="text" name="naam" value={formData.naam} onChange={handleChange} className={inputClass} placeholder="Vul je naam in" />
@@ -293,6 +295,16 @@ function ReflectieToetsweek() {
               <div>
                 <label className={labelClass}>Klas</label>
                 <input type="text" name="klas" value={formData.klas} onChange={handleChange} className={inputClass} placeholder="Bijv. 3A" />
+              </div>
+              <div>
+                <label className={labelClass}>Toetsweek</label>
+                <select name="toetsweek" value={formData.toetsweek} onChange={handleChange} className={inputClass}>
+                  <option value="">Kies toetsweek...</option>
+                  <option value="Toetsweek 1">Toetsweek 1</option>
+                  <option value="Toetsweek 2">Toetsweek 2</option>
+                  <option value="Toetsweek 3">Toetsweek 3</option>
+                  <option value="Toetsweek 4">Toetsweek 4</option>
+                </select>
               </div>
             </div>
           </div>
