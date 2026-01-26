@@ -2,16 +2,7 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 relative">
-      
-      {/* School logo - linksboven */}
-      <div className="absolute top-4 left-4 md:top-6 md:left-6">
-        <img 
-          src="/logo.jpg" 
-          alt="School logo" 
-          className="w-12 h-12 md:w-16 md:h-16 rounded-lg shadow-lg"
-        />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
 
       {/* Titel */}
       <div className="text-center">
