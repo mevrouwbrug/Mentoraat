@@ -2,29 +2,29 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 relative">
       
-      {/* School logo - pulserend op achtergrond */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* School logo - linksboven */}
+      <div className="absolute top-4 left-4 md:top-6 md:left-6">
         <img 
           src="/logo.jpg" 
           alt="School logo" 
-          className="w-96 md:w-[500px] opacity-10 animate-pulse"
-          style={{ 
-            filter: 'brightness(0) invert(1)',
-            animationDuration: '3s'
-          }}
+          className="w-12 h-12 md:w-16 md:h-16 rounded-lg shadow-lg"
         />
       </div>
 
       {/* Titel */}
-      <div className="text-center mb-10 relative z-10">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-3 drop-shadow-lg">Mentoraat</h1>
-        <p className="text-xl text-white/80">Ontdek hoe jij het beste leert en bereid je voor op gesprekken</p>
+      <div className="text-center">
+        <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">Mentoraat</h1>
+      </div>
+
+      {/* Subtitel */}
+      <div className="mt-4 mb-12">
+        <p className="text-xl text-white/80 text-center">Ontdek hoe jij het beste leert en bereid je voor op gesprekken</p>
       </div>
 
       {/* Twee knoppen naast elkaar */}
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl relative z-10">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl">
         {/* Studie-Coach knop */}
         <Link to="/studie-coach" className="flex-1 group">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 h-full flex flex-col justify-between">
@@ -68,8 +68,8 @@ function Home() {
         </Link>
       </div>
 
-      {/* Quote - zonder vlak */}
-      <div className="mt-16 relative z-10">
+      {/* Quote */}
+      <div className="mt-12">
         <p className="text-white text-center font-bold text-lg md:text-xl drop-shadow-lg max-w-xl">
           "Huiswerk maken terwijl je op je telefoon zit, is als tanden poetsen met chocopasta"
         </p>
