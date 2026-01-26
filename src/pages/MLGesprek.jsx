@@ -86,6 +86,7 @@ function MLGesprek() {
   const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all text-base"
   const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
   const labelClass = "block text-gray-800 font-semibold mb-2"
+  const cardClass = "bg-white rounded-xl p-5 shadow-md"
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
@@ -104,18 +105,13 @@ function MLGesprek() {
 
       <div className="max-w-3xl w-full relative z-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-            </svg>
-          </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">ML Gesprek</h1>
           <p className="text-white/80">Vervolggesprek - Hoe gaat het met je actiepunten?</p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Naam, Klas, Datum */}
-          <div className="bg-white rounded p-6 shadow-lg border-2 border-gray-100">
+          <div className={cardClass}>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>Naam</label>
@@ -133,7 +129,7 @@ function MLGesprek() {
           </div>
 
           {/* Gevoelsmeter */}
-          <div className="bg-white rounded p-6 shadow-lg border-2 border-gray-100">
+          <div className={cardClass}>
             <h2 className="text-lg font-bold text-slate-800 mb-4">Hoe voel je je?</h2>
             <div className="space-y-4">
               <input
@@ -162,41 +158,55 @@ function MLGesprek() {
             </div>
           </div>
 
-          {/* Vervolggesprek vragen */}
-          <div className="bg-white rounded p-6 shadow-lg border-2 border-gray-100">
-            <h2 className="text-lg font-bold text-slate-800 mb-2">Vervolggesprek</h2>
-            <p className="text-slate-600 text-sm mb-4">Hoe gaat het met de actiepunten uit het vorige gesprek?</p>
-            <div className="space-y-4">
-              <div>
-                <label className={labelClass}>1. Is het gelukt? Zijn er nog actiepunten?</label>
-                <textarea name="actiepuntenStatus" value={formData.actiepuntenStatus} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf de voortgang..." />
-              </div>
-              <div>
-                <label className={labelClass}>2. Welke aanpassingen zijn er nodig?</label>
-                <textarea name="aanpassingen" value={formData.aanpassingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf eventuele aanpassingen..." />
-              </div>
-              <div>
-                <label className={labelClass}>3. Hoe ga je dat aanpakken?</label>
-                <textarea name="hoeAanpakken" value={formData.hoeAanpakken} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je nieuwe aanpak..." />
-              </div>
-              <div>
-                <label className={labelClass}>4. Wat kun je zelf doen?</label>
-                <textarea name="zelfDoen" value={formData.zelfDoen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf wat je zelf kunt doen..." />
-              </div>
-              <div>
-                <label className={labelClass}>5. Waar kunnen jouw ouders bij helpen?</label>
-                <textarea name="oudersHelpen" value={formData.oudersHelpen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf hoe ouders kunnen helpen..." />
-              </div>
-              <div>
-                <label className={labelClass}>6. Wat wil je je mentor vragen?</label>
-                <textarea name="mentorVragen" value={formData.mentorVragen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Vragen voor je mentor..." />
-              </div>
-            </div>
+          {/* Sectie header */}
+          <div className="text-center pt-4">
+            <h2 className="text-xl font-bold text-white">Vervolggesprek</h2>
+            <p className="text-white/70 text-sm">Hoe gaat het met de actiepunten uit het vorige gesprek?</p>
+          </div>
+
+          {/* Vraag 1 */}
+          <div className={cardClass}>
+            <label className={labelClass}>1. Is het gelukt? Zijn er nog actiepunten?</label>
+            <textarea name="actiepuntenStatus" value={formData.actiepuntenStatus} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf de voortgang..." />
+          </div>
+
+          {/* Vraag 2 */}
+          <div className={cardClass}>
+            <label className={labelClass}>2. Welke aanpassingen zijn er nodig?</label>
+            <textarea name="aanpassingen" value={formData.aanpassingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf eventuele aanpassingen..." />
+          </div>
+
+          {/* Vraag 3 */}
+          <div className={cardClass}>
+            <label className={labelClass}>3. Hoe ga je dat aanpakken?</label>
+            <textarea name="hoeAanpakken" value={formData.hoeAanpakken} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je nieuwe aanpak..." />
+          </div>
+
+          {/* Vraag 4 */}
+          <div className={cardClass}>
+            <label className={labelClass}>4. Wat kun je zelf doen?</label>
+            <textarea name="zelfDoen" value={formData.zelfDoen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf wat je zelf kunt doen..." />
+          </div>
+
+          {/* Vraag 5 */}
+          <div className={cardClass}>
+            <label className={labelClass}>5. Waar kunnen jouw ouders bij helpen?</label>
+            <textarea name="oudersHelpen" value={formData.oudersHelpen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf hoe ouders kunnen helpen..." />
+          </div>
+
+          {/* Vraag 6 */}
+          <div className={cardClass}>
+            <label className={labelClass}>6. Wat wil je je mentor vragen?</label>
+            <textarea name="mentorVragen" value={formData.mentorVragen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Vragen voor je mentor..." />
           </div>
 
           {/* Actiepunten */}
-          <div className="bg-white rounded p-6 shadow-lg border-2 border-pink-200">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">Mijn actiepunten voor komende periode</h2>
+          <div className="text-center pt-4">
+            <h2 className="text-xl font-bold text-white">Actiepunten</h2>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-md border-2 border-pink-200">
+            <label className={labelClass}>Mijn actiepunten voor komende periode</label>
             <textarea name="actiepunten" value={formData.actiepunten} onChange={handleChange} rows="4" className={textareaClass} placeholder="1.&#10;2.&#10;3." />
           </div>
 
