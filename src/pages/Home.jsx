@@ -2,7 +2,16 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 relative">
+      
+      {/* School logo - linksboven */}
+      <div className="absolute top-4 left-4 md:top-6 md:left-6">
+        <img 
+          src="/logo.png" 
+          alt="ISW Hoogeland" 
+          className="h-12 md:h-16 w-auto"
+        />
+      </div>
 
       {/* Titel */}
       <div className="text-center">
