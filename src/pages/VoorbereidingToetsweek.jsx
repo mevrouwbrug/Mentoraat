@@ -10,7 +10,7 @@ function VoorbereidingToetsweek() {
   })
 
   const [leerstofRijen, setLeerstofRijen] = useState([
-    { id: 1, vak: '', soLeerstof: '', pwLeerstof: '', leermiddelen: '' }
+    { id: 1, vak: '', leerstof: '', leermiddelen: '' }
   ])
 
   const [leerstrategieRijen, setLeerstrategieRijen] = useState([
@@ -31,7 +31,7 @@ function VoorbereidingToetsweek() {
 
   const voegLeerstofRijToe = () => {
     const nieuweId = Math.max(...leerstofRijen.map(r => r.id)) + 1
-    setLeerstofRijen([...leerstofRijen, { id: nieuweId, vak: '', soLeerstof: '', pwLeerstof: '', leermiddelen: '' }])
+    setLeerstofRijen([...leerstofRijen, { id: nieuweId, vak: '', leerstof: '', leermiddelen: '' }])
   }
 
   const voegStrategieRijToe = () => {
@@ -75,9 +75,8 @@ function VoorbereidingToetsweek() {
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
     doc.text('Vak', 20, y)
-    doc.text('SO leerstof', 50, y)
-    doc.text('PW leerstof', 90, y)
-    doc.text('Leermiddelen', 130, y)
+    doc.text('Leerstof', 50, y)
+    doc.text('Leermiddelen', 120, y)
     y += 6
 
     doc.setFont('helvetica', 'normal')
@@ -85,9 +84,8 @@ function VoorbereidingToetsweek() {
     leerstofRijen.forEach(rij => {
       if (y > 270) { doc.addPage(); y = 20 }
       doc.text(rij.vak || '-', 20, y)
-      doc.text(doc.splitTextToSize(rij.soLeerstof || '-', 35), 50, y)
-      doc.text(doc.splitTextToSize(rij.pwLeerstof || '-', 35), 90, y)
-      doc.text(doc.splitTextToSize(rij.leermiddelen || '-', 50), 130, y)
+      doc.text(doc.splitTextToSize(rij.leerstof || '-', 65), 50, y)
+      doc.text(doc.splitTextToSize(rij.leermiddelen || '-', 60), 120, y)
       y += 10
     })
     y += 10
@@ -178,8 +176,7 @@ function VoorbereidingToetsweek() {
                 <thead>
                   <tr className="text-left text-slate-600 border-b border-slate-200">
                     <th className="pb-3 pr-2 font-medium text-sm w-24">Vak</th>
-                    <th className="pb-3 px-2 font-medium text-sm">SO leerstof</th>
-                    <th className="pb-3 px-2 font-medium text-sm">PW leerstof</th>
+                    <th className="pb-3 px-2 font-medium text-sm">Leerstof</th>
                     <th className="pb-3 px-2 font-medium text-sm">Leermiddelen</th>
                     <th className="pb-3 pl-2 w-12"></th>
                   </tr>
@@ -191,10 +188,7 @@ function VoorbereidingToetsweek() {
                         <input type="text" value={rij.vak} onChange={(e) => handleLeerstofChange(rij.id, 'vak', e.target.value)} className={smallInputClass} placeholder="Vak" />
                       </td>
                       <td className="py-2 px-2">
-                        <input type="text" value={rij.soLeerstof} onChange={(e) => handleLeerstofChange(rij.id, 'soLeerstof', e.target.value)} className={smallInputClass} placeholder="SO leerstof" />
-                      </td>
-                      <td className="py-2 px-2">
-                        <input type="text" value={rij.pwLeerstof} onChange={(e) => handleLeerstofChange(rij.id, 'pwLeerstof', e.target.value)} className={smallInputClass} placeholder="PW leerstof" />
+                        <input type="text" value={rij.leerstof} onChange={(e) => handleLeerstofChange(rij.id, 'leerstof', e.target.value)} className={smallInputClass} placeholder="Wat moet je leren?" />
                       </td>
                       <td className="py-2 px-2">
                         <input type="text" value={rij.leermiddelen} onChange={(e) => handleLeerstofChange(rij.id, 'leermiddelen', e.target.value)} className={smallInputClass} placeholder="Leermiddelen" />
