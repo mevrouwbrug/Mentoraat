@@ -5,6 +5,7 @@ import ResultPage from './pages/ResultPage'
 import Gesprekken from './pages/Gesprekken'
 import InzichtInJezelf from './pages/InzichtInJezelf'
 import MOLGesprek from './pages/MOLGesprek'
+import MLGesprek from './pages/MLGesprek'
 import VoorbereidingToetsweek from './pages/VoorbereidingToetsweek'
 import ReflectieToetsweek from './pages/ReflectieToetsweek'
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/gesprekken" element={<Gesprekken />} />
         <Route path="/gesprekken/inzicht" element={<InzichtInJezelf />} />
         <Route path="/gesprekken/mol" element={<MOLGesprek />} />
+        <Route path="/gesprekken/ml" element={<MLGesprek />} />
         <Route path="/gesprekken/voorbereiding" element={<VoorbereidingToetsweek />} />
         <Route path="/gesprekken/reflectie" element={<ReflectieToetsweek />} />
       </Routes>

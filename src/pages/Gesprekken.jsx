@@ -14,14 +14,25 @@ const formulieren = [
   },
   {
     id: 'mol',
-    titel: 'M(O)L Gesprekken',
-    beschrijving: 'Reflectieformulier met gevoelsmeter voor mentorgesprekken',
+    titel: 'MOL Gesprek',
+    beschrijving: 'Reflectieformulier met gevoelsmeter en gespreksvragen',
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
       </svg>
     ),
     gradient: 'from-violet-500 to-purple-500'
+  },
+  {
+    id: 'ml',
+    titel: 'ML Gesprek',
+    beschrijving: 'Vervolggesprek over actiepunten uit vorig gesprek',
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+      </svg>
+    ),
+    gradient: 'from-pink-500 to-rose-500'
   },
   {
     id: 'voorbereiding',

@@ -2,20 +2,18 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { jsPDF } from 'jspdf'
 
-function MOLGesprek() {
+function MLGesprek() {
   const [formData, setFormData] = useState({
     naam: '',
     klas: '',
     datum: '',
     gevoel: 50,
-    vakkenGoed: '',
-    vaardigheden: '',
-    aandacht: '',
-    aanpak: '',
-    actiepuntenMentor: '',
-    uitdagingen: '',
-    omgaanUitdagingen: '',
-    andereOnderwerpen: '',
+    actiepuntenStatus: '',
+    aanpassingen: '',
+    hoeAanpakken: '',
+    zelfDoen: '',
+    oudersHelpen: '',
+    mentorVragen: '',
     actiepunten: ''
   })
 
@@ -40,7 +38,7 @@ function MOLGesprek() {
 
     doc.setFontSize(20)
     doc.setFont('helvetica', 'bold')
-    doc.text('MOL Gesprek', pageWidth / 2, y, { align: 'center' })
+    doc.text('ML Gesprek - Vervolggesprek', pageWidth / 2, y, { align: 'center' })
     y += 15
 
     doc.setFontSize(12)
@@ -69,33 +67,31 @@ function MOLGesprek() {
       y += 5
     }
 
-    addSection('Gespreksvragen', [
-      { label: '1. In welke vakken ben je goed', value: formData.vakkenGoed },
-      { label: '2. Over welke vaardigheden ben je tevreden', value: formData.vaardigheden },
-      { label: '3. Waar wil je meer aandacht voor', value: formData.aandacht },
-      { label: '4. Hoe ga je dit aanpakken', value: formData.aanpak },
-      { label: '5. Actiepunten van mentor', value: formData.actiepuntenMentor },
-      { label: '6. Welke uitdagingen verwacht je', value: formData.uitdagingen },
-      { label: '7. Hoe ga je met uitdagingen om', value: formData.omgaanUitdagingen },
-      { label: '8. Andere onderwerpen', value: formData.andereOnderwerpen }
+    addSection('Vervolggesprek - Hoe gaat het met de actiepunten uit het vorige gesprek?', [
+      { label: '1. Is het gelukt? Zijn er nog actiepunten', value: formData.actiepuntenStatus },
+      { label: '2. Welke aanpassingen zijn er nodig', value: formData.aanpassingen },
+      { label: '3. Hoe ga je dat aanpakken', value: formData.hoeAanpakken },
+      { label: '4. Wat kun je zelf doen', value: formData.zelfDoen },
+      { label: '5. Waar kunnen jouw ouders bij helpen', value: formData.oudersHelpen },
+      { label: '6. Wat wil je je mentor vragen', value: formData.mentorVragen }
     ])
 
     addSection('Mijn actiepunten voor komende periode', [
       { label: 'Actiepunten', value: formData.actiepunten }
     ])
 
-    doc.save(`MOL_Gesprek_${formData.naam || 'formulier'}.pdf`)
+    doc.save(`ML_Gesprek_${formData.naam || 'formulier'}.pdf`)
   }
 
-  const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-violet-500 focus:outline-none transition-all text-base"
-  const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-violet-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
+  const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all text-base"
+  const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
   const labelClass = "block text-gray-800 font-semibold mb-2"
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
       {/* Decoratieve elementen */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-400 rounded-full blur-3xl opacity-20"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-pink-400 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-rose-400 rounded-full blur-3xl opacity-20"></div>
 
       <div className="w-full max-w-3xl relative z-10">
         <Link to="/gesprekken" className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg px-4 py-2 text-white hover:bg-white/30 transition-all mb-6 no-print">
@@ -108,13 +104,13 @@ function MOLGesprek() {
 
       <div className="max-w-3xl w-full relative z-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
             </svg>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">MOL Gesprek</h1>
-          <p className="text-white/80">Reflectieformulier voor mentorgesprek</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">ML Gesprek</h1>
+          <p className="text-white/80">Vervolggesprek - Hoe gaat het met je actiepunten?</p>
         </div>
 
         <div className="space-y-6">
@@ -166,54 +162,47 @@ function MOLGesprek() {
             </div>
           </div>
 
-          {/* Gespreksvragen */}
+          {/* Vervolggesprek vragen */}
           <div className="bg-white rounded p-6 shadow-lg border-2 border-gray-100">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">Gespreksvragen</h2>
+            <h2 className="text-lg font-bold text-slate-800 mb-2">Vervolggesprek</h2>
+            <p className="text-slate-600 text-sm mb-4">Hoe gaat het met de actiepunten uit het vorige gesprek?</p>
             <div className="space-y-4">
               <div>
-                <label className={labelClass}>1. In welke vakken ben je goed?</label>
-                <textarea name="vakkenGoed" value={formData.vakkenGoed} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf in welke vakken je goed bent..." />
+                <label className={labelClass}>1. Is het gelukt? Zijn er nog actiepunten?</label>
+                <textarea name="actiepuntenStatus" value={formData.actiepuntenStatus} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf de voortgang..." />
               </div>
               <div>
-                <label className={labelClass}>2. Over welke vaardigheden ben je tevreden?</label>
-                <textarea name="vaardigheden" value={formData.vaardigheden} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je sterke vaardigheden..." />
+                <label className={labelClass}>2. Welke aanpassingen zijn er nodig?</label>
+                <textarea name="aanpassingen" value={formData.aanpassingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf eventuele aanpassingen..." />
               </div>
               <div>
-                <label className={labelClass}>3. Waar wil je graag (meer) aandacht voor besteden?</label>
-                <textarea name="aandacht" value={formData.aandacht} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf waar je aan wilt werken..." />
+                <label className={labelClass}>3. Hoe ga je dat aanpakken?</label>
+                <textarea name="hoeAanpakken" value={formData.hoeAanpakken} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je nieuwe aanpak..." />
               </div>
               <div>
-                <label className={labelClass}>4. Hoe ga je dit aanpakken?</label>
-                <textarea name="aanpak" value={formData.aanpak} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf je aanpak..." />
+                <label className={labelClass}>4. Wat kun je zelf doen?</label>
+                <textarea name="zelfDoen" value={formData.zelfDoen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf wat je zelf kunt doen..." />
               </div>
               <div>
-                <label className={labelClass}>5. Welke actiepunten heeft jouw docent/mentor voor jou?</label>
-                <textarea name="actiepuntenMentor" value={formData.actiepuntenMentor} onChange={handleChange} rows="2" className={textareaClass} placeholder="Vul de actiepunten in..." />
+                <label className={labelClass}>5. Waar kunnen jouw ouders bij helpen?</label>
+                <textarea name="oudersHelpen" value={formData.oudersHelpen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf hoe ouders kunnen helpen..." />
               </div>
               <div>
-                <label className={labelClass}>6. Welke uitdagingen verwacht je tegen te komen?</label>
-                <textarea name="uitdagingen" value={formData.uitdagingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf mogelijke uitdagingen..." />
-              </div>
-              <div>
-                <label className={labelClass}>7. Hoe ga je met deze uitdagingen om?</label>
-                <textarea name="omgaanUitdagingen" value={formData.omgaanUitdagingen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Beschrijf hoe je hiermee omgaat..." />
-              </div>
-              <div>
-                <label className={labelClass}>8. Welke andere onderwerpen wil je bespreken?</label>
-                <textarea name="andereOnderwerpen" value={formData.andereOnderwerpen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Eventuele andere onderwerpen..." />
+                <label className={labelClass}>6. Wat wil je je mentor vragen?</label>
+                <textarea name="mentorVragen" value={formData.mentorVragen} onChange={handleChange} rows="2" className={textareaClass} placeholder="Vragen voor je mentor..." />
               </div>
             </div>
           </div>
 
           {/* Actiepunten */}
-          <div className="bg-white rounded p-6 shadow-lg border-2 border-violet-200">
+          <div className="bg-white rounded p-6 shadow-lg border-2 border-pink-200">
             <h2 className="text-lg font-bold text-slate-800 mb-4">Mijn actiepunten voor komende periode</h2>
             <textarea name="actiepunten" value={formData.actiepunten} onChange={handleChange} rows="4" className={textareaClass} placeholder="1.&#10;2.&#10;3." />
           </div>
 
           {/* PDF knop */}
           <div className="flex justify-center pt-4 no-print">
-            <button onClick={generatePDF} className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-medium py-3 px-6 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-violet-200 hover:shadow-xl hover:scale-105">
+            <button onClick={generatePDF} className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium py-3 px-6 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -226,4 +215,4 @@ function MOLGesprek() {
   )
 }
 
-export default MOLGesprek
+export default MLGesprek
