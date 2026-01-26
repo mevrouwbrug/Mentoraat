@@ -2,20 +2,29 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
-      {/* Logo en titel */}
-      <div className="text-center mb-10">
-        <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/30 shadow-lg">
-          <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-3 drop-shadow-lg">Mentoruur</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 relative overflow-hidden">
+      
+      {/* School logo - pulserend op achtergrond */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img 
+          src="/logo.jpg" 
+          alt="School logo" 
+          className="w-96 md:w-[500px] opacity-10 animate-pulse"
+          style={{ 
+            filter: 'brightness(0) invert(1)',
+            animationDuration: '3s'
+          }}
+        />
+      </div>
+
+      {/* Titel */}
+      <div className="text-center mb-10 relative z-10">
+        <h1 className="text-5xl md:text-6xl font-bold text-white mb-3 drop-shadow-lg">Mentoraat</h1>
         <p className="text-xl text-white/80">Ontdek hoe jij het beste leert en bereid je voor op gesprekken</p>
       </div>
 
       {/* Twee knoppen naast elkaar */}
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl relative z-10">
         {/* Studie-Coach knop */}
         <Link to="/studie-coach" className="flex-1 group">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 h-full flex flex-col justify-between">
@@ -59,13 +68,11 @@ function Home() {
         </Link>
       </div>
 
-      {/* Quote */}
-      <div className="mt-12 w-full max-w-xl">
-        <div className="bg-gray-900 rounded-lg px-8 py-5 shadow-2xl">
-          <p className="text-white text-center font-bold text-lg">
-            "Huiswerk maken terwijl je op je telefoon zit, is als tanden poetsen met chocopasta"
-          </p>
-        </div>
+      {/* Quote - zonder vlak */}
+      <div className="mt-16 relative z-10">
+        <p className="text-white text-center font-bold text-lg md:text-xl drop-shadow-lg max-w-xl">
+          "Huiswerk maken terwijl je op je telefoon zit, is als tanden poetsen met chocopasta"
+        </p>
       </div>
     </div>
   )
