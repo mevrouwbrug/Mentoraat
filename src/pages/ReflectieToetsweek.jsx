@@ -11,6 +11,97 @@ const leerstrategieen = {
 const positieveLeergewoontes = ['Op een rustige plek leren', 'Op tijd beginnen', 'Planning maken', 'Genoeg pauzes nemen', 'Telefoon wegleggen/op stil', 'Anders']
 const negatieveLeergewoontes = ['Op een rommelige/drukke plek leren', 'Te laat beginnen', 'Geen planning maken', 'Geen/weinig pauzes nemen', 'Veel afleiding van telefoon', 'Anders']
 
+// Styling classes
+const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-amber-500 focus:outline-none transition-all text-base"
+const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-amber-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
+const labelClass = "block text-gray-800 font-semibold mb-2"
+
+// Component buiten hoofdcomponent om re-renders te voorkomen
+const StrategieCheckboxes = ({ vakId, section, strategieen, onChange }) => (
+  <div className="space-y-2">
+    {leerstrategieen[section].map((strategie) => (
+      <label key={strategie} className="flex items-center gap-3 cursor-pointer group">
+        <input
+          type="checkbox"
+          checked={strategieen[section]?.includes(strategie) || false}
+          onChange={() => onChange(vakId, section, strategie)}
+          className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+        />
+        <span className="text-slate-600 text-sm group-hover:text-slate-800">{strategie}</span>
+      </label>
+    ))}
+  </div>
+)
+
+// VakCard component buiten hoofdcomponent om re-renders te voorkomen
+const VakCard = ({ vak, type, onVakChange, onStrategieChange, onVerwijder, canDelete }) => {
+  const isGoed = type === 'goed'
+  const borderColor = isGoed ? 'border-green-200' : 'border-red-200'
+  const bgColor = isGoed ? 'bg-green-50' : 'bg-red-50'
+  
+  return (
+    <div className={`bg-white rounded p-6 shadow-sm border-2 ${borderColor} mb-4`}>
+      <div className="flex justify-between items-start mb-4">
+        <h3 className="font-bold text-slate-800">
+          {isGoed ? 'Vak dat goed ging' : 'Vak dat minder goed ging'}
+        </h3>
+        {canDelete && (
+          <button onClick={() => onVerwijder(vak.id)} className="text-slate-400 hover:text-red-500 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label className={labelClass}>Vak</label>
+          <input type="text" value={vak.vak} onChange={(e) => onVakChange(vak.id, 'vak', e.target.value)} className={inputClass} placeholder="Naam van het vak" />
+        </div>
+        <div>
+          <label className={labelClass}>Cijfer</label>
+          <input type="text" value={vak.cijfer} onChange={(e) => onVakChange(vak.id, 'cijfer', e.target.value)} className={inputClass} placeholder="Bijv. 7.5" />
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <label className={labelClass}>{isGoed ? 'Waarom ben je tevreden?' : 'Waarom ben je niet tevreden?'}</label>
+        <textarea
+          value={isGoed ? vak.waaromTevreden : vak.waaromNietTevreden}
+          onChange={(e) => onVakChange(vak.id, isGoed ? 'waaromTevreden' : 'waaromNietTevreden', e.target.value)}
+          rows="2"
+          className={textareaClass}
+          placeholder={isGoed ? 'Beschrijf waarom je tevreden bent...' : 'Beschrijf waarom je niet tevreden bent...'}
+        />
+      </div>
+
+      <div className={`${bgColor} rounded p-4 mb-4`}>
+        <h4 className="text-slate-800 font-medium mb-3 text-sm">Welke leerstrategieën heb je gebruikt?</h4>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div>
+            <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Voorbereiding</p>
+            <StrategieCheckboxes vakId={vak.id} section="voorbereiding" strategieen={vak.strategieen} onChange={onStrategieChange} />
+          </div>
+          <div>
+            <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Leren</p>
+            <StrategieCheckboxes vakId={vak.id} section="leren" strategieen={vak.strategieen} onChange={onStrategieChange} />
+          </div>
+          <div>
+            <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Onthouden</p>
+            <StrategieCheckboxes vakId={vak.id} section="onthouden" strategieen={vak.strategieen} onChange={onStrategieChange} />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label className={labelClass}>Waarom koos je voor deze strategieën?</label>
+        <textarea value={vak.waaromStrategieen} onChange={(e) => onVakChange(vak.id, 'waaromStrategieen', e.target.value)} rows="2" className={textareaClass} placeholder="Leg uit waarom je voor deze strategieën koos..." />
+      </div>
+    </div>
+  )
+}
+
 function ReflectieToetsweek() {
   const [formData, setFormData] = useState({
     naam: '',
@@ -168,94 +259,6 @@ function ReflectieToetsweek() {
     ])
 
     doc.save(`Reflectie_Toetsweek_${formData.naam || 'formulier'}.pdf`)
-  }
-
-  const inputClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-amber-500 focus:outline-none transition-all text-base"
-  const textareaClass = "w-full bg-white border-2 border-gray-200 rounded px-4 py-3 text-gray-800 placeholder-gray-400 focus:border-amber-500 focus:outline-none transition-all resize-none text-base min-h-[80px]"
-  const labelClass = "block text-gray-800 font-semibold mb-2"
-
-  const StrategieCheckboxes = ({ vakId, section, strategieen, onChange }) => (
-    <div className="space-y-2">
-      {leerstrategieen[section].map((strategie) => (
-        <label key={strategie} className="flex items-center gap-3 cursor-pointer group">
-          <input
-            type="checkbox"
-            checked={strategieen[section]?.includes(strategie) || false}
-            onChange={() => onChange(vakId, section, strategie)}
-            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-          />
-          <span className="text-slate-600 text-sm group-hover:text-slate-800">{strategie}</span>
-        </label>
-      ))}
-    </div>
-  )
-
-  const VakCard = ({ vak, type, onVakChange, onStrategieChange, onVerwijder, canDelete }) => {
-    const isGoed = type === 'goed'
-    const borderColor = isGoed ? 'border-green-200' : 'border-red-200'
-    const bgColor = isGoed ? 'bg-green-50' : 'bg-red-50'
-    
-    return (
-      <div className={`bg-white rounded p-6 shadow-sm border-2 ${borderColor} mb-4`}>
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="font-bold text-slate-800">
-            {isGoed ? 'Vak dat goed ging' : 'Vak dat minder goed ging'}
-          </h3>
-          {canDelete && (
-            <button onClick={() => onVerwijder(vak.id)} className="text-slate-400 hover:text-red-500 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className={labelClass}>Vak</label>
-            <input type="text" value={vak.vak} onChange={(e) => onVakChange(vak.id, 'vak', e.target.value)} className={inputClass} placeholder="Naam van het vak" />
-          </div>
-          <div>
-            <label className={labelClass}>Cijfer</label>
-            <input type="text" value={vak.cijfer} onChange={(e) => onVakChange(vak.id, 'cijfer', e.target.value)} className={inputClass} placeholder="Bijv. 7.5" />
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label className={labelClass}>{isGoed ? 'Waarom ben je tevreden?' : 'Waarom ben je niet tevreden?'}</label>
-          <textarea
-            value={isGoed ? vak.waaromTevreden : vak.waaromNietTevreden}
-            onChange={(e) => onVakChange(vak.id, isGoed ? 'waaromTevreden' : 'waaromNietTevreden', e.target.value)}
-            rows="2"
-            className={textareaClass}
-            placeholder={isGoed ? 'Beschrijf waarom je tevreden bent...' : 'Beschrijf waarom je niet tevreden bent...'}
-          />
-        </div>
-
-        <div className={`${bgColor} rounded p-4 mb-4`}>
-          <h4 className="text-slate-800 font-medium mb-3 text-sm">Welke leerstrategieën heb je gebruikt?</h4>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Voorbereiding</p>
-              <StrategieCheckboxes vakId={vak.id} section="voorbereiding" strategieen={vak.strategieen} onChange={onStrategieChange} />
-            </div>
-            <div>
-              <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Leren</p>
-              <StrategieCheckboxes vakId={vak.id} section="leren" strategieen={vak.strategieen} onChange={onStrategieChange} />
-            </div>
-            <div>
-              <p className="text-slate-600 font-medium mb-2 text-xs uppercase tracking-wide">Onthouden</p>
-              <StrategieCheckboxes vakId={vak.id} section="onthouden" strategieen={vak.strategieen} onChange={onStrategieChange} />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label className={labelClass}>Waarom koos je voor deze strategieën?</label>
-          <textarea value={vak.waaromStrategieen} onChange={(e) => onVakChange(vak.id, 'waaromStrategieen', e.target.value)} rows="2" className={textareaClass} placeholder="Leg uit waarom je voor deze strategieën koos..." />
-        </div>
-      </div>
-    )
   }
 
   return (
