@@ -191,60 +191,123 @@ function ReflectieToetsweek() {
   const generatePDF = () => {
     const doc = new jsPDF()
     const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+    const margin = 20
+    const maxWidth = pageWidth - (margin * 2)
+    const lineHeight = 5 // Goede line height voor fontsize 10
+    const bottomMargin = 25
     let y = 20
 
+    // Helper: check of er genoeg ruimte is, zo niet, nieuwe pagina
+    const checkPageBreak = (neededHeight) => {
+      if (y + neededHeight > pageHeight - bottomMargin) {
+        doc.addPage()
+        y = 20
+      }
+    }
+
+    // Titel
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
     doc.text('Reflectie Toetsweek', pageWidth / 2, y, { align: 'center' })
-    y += 12
-
-    doc.setFontSize(11)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Naam: ${formData.naam}`, 20, y)
-    doc.text(`Klas: ${formData.klas}`, 80, y)
-    doc.text(`${formData.toetsweek || 'Toetsweek: -'}`, 130, y)
     y += 15
 
+    // Naam, Klas, Toetsweek
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Naam: ${formData.naam || '-'}`, margin, y)
+    doc.text(`Klas: ${formData.klas || '-'}`, 80, y)
+    doc.text(`${formData.toetsweek || 'Toetsweek: -'}`, 130, y)
+    y += 12
+
+    // Lijn onder header
+    doc.setDrawColor(200, 200, 200)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 10
+
     const addSection = (title, content) => {
-      if (y > 250) { doc.addPage(); y = 20 }
+      // Check ruimte voor titel + minimaal 1 item
+      checkPageBreak(25)
+      
+      // Sectie titel
       doc.setFontSize(12)
       doc.setFont('helvetica', 'bold')
-      doc.text(title, 20, y)
-      y += 7
-      doc.setFontSize(9)
+      doc.setTextColor(50, 50, 50)
+      doc.text(title, margin, y)
+      y += 8
+
+      doc.setFontSize(10)
       doc.setFont('helvetica', 'normal')
+      doc.setTextColor(60, 60, 60)
+
       content.forEach(item => {
-        if (y > 270) { doc.addPage(); y = 20 }
-        const lines = doc.splitTextToSize(`${item.label}: ${item.value || '-'}`, pageWidth - 40)
-        doc.text(lines, 20, y)
-        y += lines.length * 4 + 2
+        const text = `${item.label}: ${item.value || '-'}`
+        const lines = doc.splitTextToSize(text, maxWidth)
+        const blockHeight = lines.length * lineHeight + 3
+
+        // Check of dit blok past, zo niet nieuwe pagina
+        checkPageBreak(blockHeight)
+
+        // Label in bold
+        doc.setFont('helvetica', 'bold')
+        doc.text(`${item.label}:`, margin, y)
+        const labelWidth = doc.getTextWidth(`${item.label}: `)
+        
+        // Value in normal
+        doc.setFont('helvetica', 'normal')
+        const valueText = item.value || '-'
+        const valueLines = doc.splitTextToSize(valueText, maxWidth - labelWidth)
+        
+        if (valueLines.length === 1 && labelWidth + doc.getTextWidth(valueText) < maxWidth) {
+          // Past op 1 regel naast het label
+          doc.text(valueText, margin + labelWidth, y)
+          y += lineHeight + 2
+        } else {
+          // Meerdere regels nodig, value onder het label
+          y += lineHeight
+          const allValueLines = doc.splitTextToSize(valueText, maxWidth)
+          allValueLines.forEach(line => {
+            checkPageBreak(lineHeight)
+            doc.text(line, margin, y)
+            y += lineHeight
+          })
+          y += 2
+        }
       })
-      y += 5
+      y += 6
     }
 
+    // Vakken die goed gingen
     vakkenGoed.forEach((vak, index) => {
-      addSection(`Vak dat goed ging ${index + 1}`, [
+      addSection(`Vak dat goed ging ${vakkenGoed.length > 1 ? index + 1 : ''}`.trim(), [
         { label: 'Vak', value: vak.vak },
         { label: 'Cijfer', value: vak.cijfer },
         { label: 'Waarom tevreden', value: vak.waaromTevreden },
-        { label: 'Strategieën', value: [...vak.strategieen.voorbereiding, ...vak.strategieen.leren, ...vak.strategieen.onthouden].join(', ') }
+        { label: 'Gebruikte strategieën', value: [...vak.strategieen.voorbereiding, ...vak.strategieen.leren, ...vak.strategieen.onthouden].join(', ') },
+        { label: 'Waarom deze strategieën', value: vak.waaromStrategieen }
       ])
     })
 
+    // Vakken die minder goed gingen
     vakkenMinder.forEach((vak, index) => {
-      addSection(`Vak dat minder goed ging ${index + 1}`, [
+      addSection(`Vak dat minder goed ging ${vakkenMinder.length > 1 ? index + 1 : ''}`.trim(), [
         { label: 'Vak', value: vak.vak },
         { label: 'Cijfer', value: vak.cijfer },
         { label: 'Waarom niet tevreden', value: vak.waaromNietTevreden },
-        { label: 'Strategieën', value: [...vak.strategieen.voorbereiding, ...vak.strategieen.leren, ...vak.strategieen.onthouden].join(', ') }
+        { label: 'Gebruikte strategieën', value: [...vak.strategieen.voorbereiding, ...vak.strategieen.leren, ...vak.strategieen.onthouden].join(', ') },
+        { label: 'Waarom deze strategieën', value: vak.waaromStrategieen }
       ])
     })
 
-    addSection('Reflectie', [
+    addSection('Wat hielp tijdens het leren', [
       { label: 'Strategieën die werkten', value: formData.positieveStrategieen },
-      { label: 'Goede leergewoontes', value: formData.positieveLeergewoontes.join(', ') },
+      { label: 'Goede leergewoontes', value: formData.positieveLeergewoontes.join(', ') }
+    ])
+
+    addSection('Wat werkte minder goed', [
       { label: 'Strategieën die niet werkten', value: formData.negatieveStrategieen },
-      { label: 'Slechte leergewoontes', value: formData.negatieveLeergewoontes.join(', ') }
+      { label: 'Slechte leergewoontes', value: formData.negatieveLeergewoontes.join(', ') },
+      { label: 'Waarom werkte dit niet', value: formData.waaromMinderGoed }
     ])
 
     addSection('Volgende toetsweek', [

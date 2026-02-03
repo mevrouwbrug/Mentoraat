@@ -47,32 +47,77 @@ function InzichtInJezelf() {
   const generatePDF = () => {
     const doc = new jsPDF()
     const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+    const margin = 20
+    const maxWidth = pageWidth - (margin * 2)
+    const lineHeight = 5
+    const bottomMargin = 25
     let y = 20
 
-    doc.setFontSize(20)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Startgesprek Werkblad - Inzicht in Jezelf', pageWidth / 2, y, { align: 'center' })
-    y += 15
+    const checkPageBreak = (neededHeight) => {
+      if (y + neededHeight > pageHeight - bottomMargin) {
+        doc.addPage()
+        y = 20
+      }
+    }
 
-    doc.setFontSize(12)
+    // Titel
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Inzicht in Jezelf - Startgesprek', pageWidth / 2, y, { align: 'center' })
+    y += 12
+
+    // Naam en Klas
+    doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
-    doc.text(`Naam: ${formData.naam}`, 20, y)
-    doc.text(`Klas: ${formData.klas}`, 120, y)
-    y += 15
+    doc.text(`Naam: ${formData.naam || '-'}`, margin, y)
+    doc.text(`Klas: ${formData.klas || '-'}`, 120, y)
+    y += 10
+
+    // Lijn
+    doc.setDrawColor(200, 200, 200)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 8
 
     const addSection = (title, fields) => {
-      if (y > 250) { doc.addPage(); y = 20 }
-      doc.setFontSize(14)
+      checkPageBreak(20)
+      
+      doc.setFontSize(12)
       doc.setFont('helvetica', 'bold')
-      doc.text(title, 20, y)
-      y += 8
+      doc.setTextColor(50, 50, 50)
+      doc.text(title, margin, y)
+      y += 7
+
       doc.setFontSize(10)
       doc.setFont('helvetica', 'normal')
-      fields.forEach(field => {
-        if (y > 270) { doc.addPage(); y = 20 }
-        const lines = doc.splitTextToSize(`${field.label}: ${field.value || '-'}`, pageWidth - 40)
-        doc.text(lines, 20, y)
-        y += lines.length * 5 + 3
+      doc.setTextColor(60, 60, 60)
+
+      fields.forEach(item => {
+        const valueText = item.value || '-'
+        const allLines = doc.splitTextToSize(`${item.label}: ${valueText}`, maxWidth)
+        const blockHeight = allLines.length * lineHeight + 3
+
+        checkPageBreak(blockHeight)
+
+        doc.setFont('helvetica', 'bold')
+        doc.text(`${item.label}:`, margin, y)
+        const labelWidth = doc.getTextWidth(`${item.label}: `)
+        
+        doc.setFont('helvetica', 'normal')
+        
+        if (allLines.length === 1) {
+          doc.text(valueText, margin + labelWidth, y)
+          y += lineHeight + 2
+        } else {
+          y += lineHeight
+          const valueLines = doc.splitTextToSize(valueText, maxWidth)
+          valueLines.forEach(line => {
+            checkPageBreak(lineHeight)
+            doc.text(line, margin, y)
+            y += lineHeight
+          })
+          y += 2
+        }
       })
       y += 5
     }
@@ -84,9 +129,9 @@ function InzichtInJezelf() {
     ])
 
     addSection('2. School & Vakken', [
-      { label: 'Leuk vak', value: `${formData.leukVak} - ${formData.leukWaarom}` },
-      { label: 'Minder leuk vak', value: `${formData.minderLeukVak} - ${formData.minderLeukWaarom}` },
-      { label: 'Meest geleerd', value: `${formData.meestGeleerd} - ${formData.watGeleerd}` },
+      { label: 'Leuk vak', value: formData.leukVak ? `${formData.leukVak} - ${formData.leukWaarom}` : '-' },
+      { label: 'Minder leuk vak', value: formData.minderLeukVak ? `${formData.minderLeukVak} - ${formData.minderLeukWaarom}` : '-' },
+      { label: 'Meest geleerd', value: formData.meestGeleerd ? `${formData.meestGeleerd} - ${formData.watGeleerd}` : '-' },
       { label: 'Favoriet moment', value: formData.favorietMoment }
     ])
 

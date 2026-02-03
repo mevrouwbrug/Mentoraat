@@ -54,62 +54,133 @@ function VoorbereidingToetsweek() {
   const generatePDF = () => {
     const doc = new jsPDF()
     const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+    const margin = 20
+    const bottomMargin = 25
     let y = 20
 
-    doc.setFontSize(18)
+    const checkPageBreak = (neededHeight) => {
+      if (y + neededHeight > pageHeight - bottomMargin) {
+        doc.addPage()
+        y = 20
+        return true
+      }
+      return false
+    }
+
+    // Titel
+    doc.setFontSize(16)
     doc.setFont('helvetica', 'bold')
     doc.text(`Voorbereiding Toetsweek${formData.periode ? ` - ${formData.periode}` : ''}`, pageWidth / 2, y, { align: 'center' })
     y += 12
 
+    // Info
     doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
-    doc.text(`Naam: ${formData.naam}`, 20, y)
-    doc.text(`Klas: ${formData.klas}`, 120, y)
-    y += 15
+    doc.text(`Naam: ${formData.naam || '-'}`, margin, y)
+    doc.text(`Klas: ${formData.klas || '-'}`, 100, y)
+    y += 10
 
-    doc.setFontSize(14)
+    // Lijn
+    doc.setDrawColor(200, 200, 200)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 10
+
+    // Tabel 1: Wat moet je leren
+    doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
-    doc.text('Wat moet je leren?', 20, y)
+    doc.setTextColor(50, 50, 50)
+    doc.text('Wat moet je leren?', margin, y)
     y += 8
 
+    // Tabel header
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('Vak', 20, y)
+    doc.setTextColor(80, 80, 80)
+    doc.text('Vak', margin, y)
     doc.text('Leerstof', 50, y)
-    doc.text('Leermiddelen', 120, y)
-    y += 6
+    doc.text('Leermiddelen', 125, y)
+    y += 5
 
+    doc.setDrawColor(180, 180, 180)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 4
+
+    // Tabel rijen
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
+    doc.setFontSize(9)
+    doc.setTextColor(60, 60, 60)
+
     leerstofRijen.forEach(rij => {
-      if (y > 270) { doc.addPage(); y = 20 }
-      doc.text(rij.vak || '-', 20, y)
-      doc.text(doc.splitTextToSize(rij.leerstof || '-', 65), 50, y)
-      doc.text(doc.splitTextToSize(rij.leermiddelen || '-', 60), 120, y)
-      y += 10
+      const vakText = rij.vak || '-'
+      const leerstofLines = doc.splitTextToSize(rij.leerstof || '-', 70)
+      const leermiddelenLines = doc.splitTextToSize(rij.leermiddelen || '-', 60)
+      const maxLines = Math.max(leerstofLines.length, leermiddelenLines.length)
+      const rowHeight = maxLines * 4 + 4
+
+      checkPageBreak(rowHeight)
+
+      doc.text(vakText, margin, y)
+      leerstofLines.forEach((line, i) => {
+        doc.text(line, 50, y + (i * 4))
+      })
+      leermiddelenLines.forEach((line, i) => {
+        doc.text(line, 125, y + (i * 4))
+      })
+      
+      y += rowHeight
+      doc.setDrawColor(220, 220, 220)
+      doc.line(margin, y - 2, pageWidth - margin, y - 2)
     })
     y += 10
 
-    if (y > 230) { doc.addPage(); y = 20 }
-    doc.setFontSize(14)
+    // Tabel 2: Hoe ga je leren
+    checkPageBreak(40)
+    
+    doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
-    doc.text('Hoe ga je leren?', 20, y)
+    doc.setTextColor(50, 50, 50)
+    doc.text('Hoe ga je leren?', margin, y)
     y += 8
 
+    // Tabel header
     doc.setFontSize(9)
-    doc.text('Vak', 20, y)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(80, 80, 80)
+    doc.text('Vak', margin, y)
     doc.text('Niveau 1 (kennen/weten)', 50, y)
-    doc.text('Niveau 2 (snappen)', 120, y)
-    y += 6
+    doc.text('Niveau 2 (snappen)', 125, y)
+    y += 5
 
+    doc.setDrawColor(180, 180, 180)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 4
+
+    // Tabel rijen
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
+    doc.setFontSize(9)
+    doc.setTextColor(60, 60, 60)
+
     leerstrategieRijen.forEach(rij => {
-      if (y > 270) { doc.addPage(); y = 20 }
-      doc.text(rij.vak || '-', 20, y)
-      doc.text(doc.splitTextToSize(rij.niveau1 || '-', 60), 50, y)
-      doc.text(doc.splitTextToSize(rij.niveau2 || '-', 60), 120, y)
-      y += 10
+      const vakText = rij.vak || '-'
+      const niveau1Lines = doc.splitTextToSize(rij.niveau1 || '-', 70)
+      const niveau2Lines = doc.splitTextToSize(rij.niveau2 || '-', 60)
+      const maxLines = Math.max(niveau1Lines.length, niveau2Lines.length)
+      const rowHeight = maxLines * 4 + 4
+
+      checkPageBreak(rowHeight)
+
+      doc.text(vakText, margin, y)
+      niveau1Lines.forEach((line, i) => {
+        doc.text(line, 50, y + (i * 4))
+      })
+      niveau2Lines.forEach((line, i) => {
+        doc.text(line, 125, y + (i * 4))
+      })
+      
+      y += rowHeight
+      doc.setDrawColor(220, 220, 220)
+      doc.line(margin, y - 2, pageWidth - margin, y - 2)
     })
 
     doc.save(`Voorbereiding_Toetsweek_${formData.naam || 'formulier'}.pdf`)
